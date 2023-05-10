@@ -35,13 +35,13 @@ jobs:
       - name: Create JSON
         run: |
           mkdir -p public/
-          python repo/.ci-helpers/repo2json.py -i advisory-database/advisories/github-reviewed -o public/db.json
+          python repo/.ci-helpers/repo2json.py -i advisory-database/advisories/github-reviewed -o repo/public/db.json
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./repo/public
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Update db.json'
