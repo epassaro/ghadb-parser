@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  database:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clone github/advisory-database
+        uses: actions/checkout@v3
+        with:
+          repository: 'github/advisory-database'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Create JSON
+        run: |
+          mkdir -p out/
+          python .ci-helpers/repo2json -i advisory-database/advisories/github-reviewed -o out/db.json
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
