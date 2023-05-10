@@ -18,11 +18,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          path: repo
 
       - name: Clone github/advisory-database
         uses: actions/checkout@v3
         with:
           repository: 'github/advisory-database'
+          path: advisory-database
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -32,7 +35,7 @@ jobs:
       - name: Create JSON
         run: |
           mkdir -p out/
-          python .ci-helpers/repo2json.py -i advisory-database/advisories/github-reviewed -o out/db.json
+          python repo/.ci-helpers/repo2json.py -i advisory-database/advisories/github-reviewed -o out/db.json
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
